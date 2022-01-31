@@ -4,6 +4,8 @@ This is a code doodle that automatically downloads music from YouTube links in m
 
 Put your Firefox bookmarks .json file path into the variable `chosenBookmarkFileName`. Run the program. The program will never download files that are already present in the folders `output` and `ignore`.
 
+TODO: Download music from history (.sqlite) files, architect this project better for that (and maybe other browsers). Use sites that meet the music criteria that have been visited at least five times.
+
 
 Tech Details
 -----------------
