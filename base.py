@@ -12,7 +12,7 @@ downloadLimit = 100
 
 def createFolderIfNonexistent(path):
     existingFile = Path(path)
-    if not existingFile.is_file():
+    if not existingFile.is_dir():
         os.makedirs(path)
 
 def traverseBookmarks(item):
@@ -44,7 +44,7 @@ def downloadMusicOrUseCache(url, title):
         existingFile = Path(outputPath)
         existingIgnoredFile = Path("./ignore/" + title + ".mp3")
         if not existingFile.is_file() and not existingIgnoredFile.is_file():
-            ytAudioData = os.popen("yt-dlp.exe -x --get-url \"" + url + "\" --get-duration").readlines()
+            ytAudioData = os.popen("youtube-dl.exe -x --get-url \"" + url + "\" --get-duration").readlines()
             ytAudioUrl = ytAudioData[0]
 
             #Do not download files that are obviously way too long or short
@@ -69,23 +69,30 @@ def downloadMusicOrUseCache(url, title):
     print("", flush=True)
     return False
 
+def downloadMusic(url, title):
+    actuallyDownloadedFile = downloadMusicOrUseCache(url, title)
+    if not actuallyDownloadedFile:
+        with open('./ignore/' + title + '.mp3', 'w') as fp:
+            pass
+    return actuallyDownloadedFile
 
-createFolderIfNonexistent("./output/")
-createFolderIfNonexistent("./ignore/")
+def main():
+    createFolderIfNonexistent("./output/")
+    createFolderIfNonexistent("./ignore/")
 
-data = {}
-with open(chosenBookmarkFileName, encoding="utf8") as bookmarkFile:
-    data = json.load(bookmarkFile)
-    #print(str(data).encode("utf-8"))
-    ytBookmarks = traverseBookmarks(data)
-    #print(str(ytBookmarks).encode("utf-8"))
+    data = {}
+    with open(chosenBookmarkFileName, encoding="utf8") as bookmarkFile:
+        data = json.load(bookmarkFile)
+        #print(str(data).encode("utf-8"))
+        ytBookmarks = traverseBookmarks(data)
+        #print(str(ytBookmarks).encode("utf-8"))
 
-    for ytBookmark in ytBookmarks:
-        #print(str(ytBookmark).encode("utf-8"))
-        actuallyDownloadedFile = downloadMusicOrUseCache(ytBookmark["uri"], ytBookmark["title"])
-        if actuallyDownloadedFile:
-            downloadLimit = downloadLimit - 1
-            if downloadLimit == 0:
-                break
+        for ytBookmark in ytBookmarks:
+            #print(str(ytBookmark).encode("utf-8"))
+            actuallyDownloadedFile = downloadMusic(ytBookmark["uri"], ytBookmark["title"])
+            if actuallyDownloadedFile:
+                downloadLimit = downloadLimit - 1
+                if downloadLimit <= 0:
+                    break
 
-print("Downloads complete", flush=True)
+    print("Downloads complete", flush=True)
