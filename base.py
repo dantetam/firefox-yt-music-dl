@@ -7,7 +7,6 @@ from pathlib import Path
 
 
 chosenBookmarkFileName = "./bookmarks/bookmarks-2022-01-29.json"
-downloadLimit = 100
 
 
 def createFolderIfNonexistent(path):
@@ -52,7 +51,7 @@ def downloadMusicOrUseCache(url, title):
             tokens = ytDurationString.split(":")
             minutes = int(tokens[0])
 
-            if minutes >= 1 and minutes < 8 and len(tokens) <= 2: #"2 hours 9 minutes 20 seconds => [2,9,20]"
+            if minutes >= 1 and minutes < 8 and len(tokens) == 2: #"2 hours 9 minutes 20 seconds => [2,9,20]"
                 print("Downloading song title: ", flush=True)
                 print(str(title).encode("utf-8"), flush=True)
                 print("", flush=True)
@@ -63,7 +62,7 @@ def downloadMusicOrUseCache(url, title):
         else:
             print("Found file in cache", flush=True)
     except Exception as e:
-        print(e, flush=True)
+        print(str(e).encode("utf-8"), flush=True)
     print("Skipping: ", flush=True)
     print(str(title).encode("utf-8"), flush=True)
     print("", flush=True)
@@ -72,14 +71,18 @@ def downloadMusicOrUseCache(url, title):
 def downloadMusic(url, title):
     actuallyDownloadedFile = downloadMusicOrUseCache(url, title)
     if not actuallyDownloadedFile:
-        with open('./ignore/' + title + '.mp3', 'w') as fp:
+        try:
+            with open('./ignore/' + title + '.mp3', 'w') as fp:
+                pass
+        except:
             pass
     return actuallyDownloadedFile
 
 def main():
     createFolderIfNonexistent("./output/")
     createFolderIfNonexistent("./ignore/")
-
+    downloadLimit = 100
+    
     data = {}
     with open(chosenBookmarkFileName, encoding="utf8") as bookmarkFile:
         data = json.load(bookmarkFile)
