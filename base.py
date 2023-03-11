@@ -55,7 +55,7 @@ def downloadMusicOrUseCache(url, title):
         existingFile = Path(outputPath)
         existingIgnoredFile = Path("./ignore/" + title + ".mp3")
         if not existingFile.is_file() and not existingIgnoredFile.is_file():
-            ytAudioData = os.popen("youtube-dl.exe -x --get-url \"" + url + "\" --get-duration").readlines()
+            ytAudioData = os.popen("yt-dlp.exe -x --get-url \"" + url + "\" --get-duration").readlines()
             ytAudioUrl = ytAudioData[0]
 
             #Do not download files that are obviously way too long or short
