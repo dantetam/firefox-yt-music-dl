@@ -21,7 +21,7 @@ def findFirefoxPath():
     profiles = os.listdir(profilesDir)
     if len(profiles) > 0:
         profilesPath = profilesPath + profiles[0]
-        return profilesPath
+        return profilesPath + "/"
 
 
 
@@ -50,12 +50,13 @@ def traverseBookmarksHelper(result, item):
     return result
 
 def downloadMusicOrUseCache(url, title):
+    print("Attempting to get " + title)
     try:
         outputPath = "./output/" + title + ".mp3"
         existingFile = Path(outputPath)
         existingIgnoredFile = Path("./ignore/" + title + ".mp3")
         if not existingFile.is_file() and not existingIgnoredFile.is_file():
-            ytAudioData = os.popen("yt-dlp.exe -x --get-url \"" + url + "\" --get-duration").readlines()
+            ytAudioData = os.popen("yt-dlp-nightly-3-10-2023.exe -x --get-url \"" + url + "\" --get-duration").readlines()
             ytAudioUrl = ytAudioData[0]
 
             #Do not download files that are obviously way too long or short
@@ -70,11 +71,11 @@ def downloadMusicOrUseCache(url, title):
                 urllib.request.urlretrieve(ytAudioUrl, outputPath)
                 return True
             else:
-                print("File too long or too short", flush=True)
+                print("Audio length too long or too short", flush=True)
         else:
             print("Found file in cache", flush=True)
     except Exception as e:
-        print(str(e).encode("utf-8"), flush=True)
+        print("The download code errored: " + str(e).encode("utf-8"), flush=True)
         return "Errored during download"
     print("Skipping: ", flush=True)
     print(str(title).encode("utf-8"), flush=True)
