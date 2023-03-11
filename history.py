@@ -21,7 +21,7 @@ def main():
     cur = con.cursor()
 
     # The result of a "cursor.execute" can be iterated over by row
-    for row in cur.execute("SELECT * FROM moz_places WHERE visit_count >= 10 AND url LIKE '%youtube.com%';"):
+    for row in cur.execute("SELECT * FROM moz_places WHERE visit_count >= 5 AND url LIKE '%youtube.com%';"):
         #print(str(row).encode("utf-8"), flush=True)
         actuallyDownloadedFile = downloadMusic(row[1], row[2])
         if actuallyDownloadedFile:

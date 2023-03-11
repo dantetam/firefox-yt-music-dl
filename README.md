@@ -11,7 +11,7 @@ python -c "import history; print(history.main())"
 
 Run bookmark downloads:
 ```
-python -u base.py
+python -c "import base; print(base.main())"
 ```
 
 Tech Details

@@ -6,13 +6,25 @@ import re
 from pathlib import Path
 
 
-chosenBookmarkFileName = "./bookmarks/bookmarks-2022-01-29.json"
-
+# chosenBookmarkFileName = "./bookmarks/bookmarks-2022-06-22.json"
+chosenBookmarkFileName = "./bookmarks/bookmarks-2023-03-10.json"
+userDrivePath = "C:/Users/Dante" #no slash at right end
 
 def createFolderIfNonexistent(path):
     existingFile = Path(path)
     if not existingFile.is_dir():
         os.makedirs(path)
+
+def findFirefoxPath():
+    profilesPath = userDrivePath + "/AppData/Roaming/Mozilla/Firefox/Profiles/"
+    profilesDir = os.path.abspath(profilesPath)
+    profiles = os.listdir(profilesDir)
+    if len(profiles) > 0:
+        profilesPath = profilesPath + profiles[0]
+        return profilesPath
+
+
+
 
 def traverseBookmarks(item):
     return traverseBookmarksHelper([], item)
@@ -63,6 +75,7 @@ def downloadMusicOrUseCache(url, title):
             print("Found file in cache", flush=True)
     except Exception as e:
         print(str(e).encode("utf-8"), flush=True)
+        return "Errored during download"
     print("Skipping: ", flush=True)
     print(str(title).encode("utf-8"), flush=True)
     print("", flush=True)
@@ -70,7 +83,7 @@ def downloadMusicOrUseCache(url, title):
 
 def downloadMusic(url, title):
     actuallyDownloadedFile = downloadMusicOrUseCache(url, title)
-    if not actuallyDownloadedFile:
+    if actuallyDownloadedFile is False:
         try:
             with open('./ignore/' + title + '.mp3', 'w') as fp:
                 pass
@@ -82,7 +95,7 @@ def main():
     createFolderIfNonexistent("./output/")
     createFolderIfNonexistent("./ignore/")
     downloadLimit = 100
-    
+
     data = {}
     with open(chosenBookmarkFileName, encoding="utf8") as bookmarkFile:
         data = json.load(bookmarkFile)
