@@ -15,9 +15,12 @@ chosenHistoryFileName = findFirefoxPath() + "places.sqlite"
 
 
 def main():
+    createFolderIfNonexistent("./output/")
+    createFolderIfNonexistent("./ignore/")
+
     removeDupesAndSanitize("./output/")
 
-    downloadLimit = 1000
+    downloadLimit = 10000
 
     print("Attempting to read file: " + chosenHistoryFileName)
 
@@ -29,7 +32,7 @@ def main():
     print("Executing sqlite query...")
 
     # The result of a "cursor.execute" can be iterated over by row
-    for row in cur.execute("SELECT * FROM moz_places WHERE visit_count >= 5 AND url LIKE '%youtube.com%';"):
+    for row in cur.execute("SELECT * FROM moz_places WHERE visit_count >= 5 AND url LIKE '%youtube.com/watch%';"):
         print(str(downloadLimit) + " files left from history")
         #print(str(row).encode("utf-8"), flush=True)
         actuallyDownloadedFile = downloadMusic(row[1], removeExtraBitsTitle(row[2]))

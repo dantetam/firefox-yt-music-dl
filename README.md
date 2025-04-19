@@ -23,3 +23,7 @@ History files are automatically taken from the default Firefox profile directory
 Quandaries
 -----------------
 Google has grown to be one of the most profitable companies in history by scraping the web and loading other people's servers without permission and any promise of a royalty beyond exposure. If anything, this saves them bandwidth, especially if I turned on my ad blocker.
+
+To Firefox having a proprietary JSON file
+-----------------
+![xkcd 927 comic about stupid new standards](/standards.png "xkcd 927 comic about stupid new standards")
